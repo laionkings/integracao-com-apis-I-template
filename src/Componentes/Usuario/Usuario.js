@@ -1,17 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
+
+
+
 
 const User = styled.div`
   border: black 1px solid;
   margin-top: 10px;
-  width: 350px
-`
+  width: 350px;
+`;
 function Usuario(props) {
   const [usuario, setUsuario] = useState(props.usuario);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [editar, setEditar] = useState(false);
 
+  const headers = {
+    headers: {
+      authorization: "laion-pereira",
+    },
+  };
+
+  const recebeUsuarioPorId = (id) => {
+    axios
+      .get(
+        `"https://us-central1-labenu-apis.cloudfunctions.net/labenusers/users/${id}"`,
+        headers
+      )
+      .then((resposta) => {
+        setUsuario(resposta.data);
+      })
+      .catch((erro) => {
+        alert(erro.response.data.message);
+      });
+  };
+  
+  useEffect(() => {
+    recebeUsuarioPorId(usuario.id);
+  }, []);
+  
   return (
     <User>
       {editar ? (
